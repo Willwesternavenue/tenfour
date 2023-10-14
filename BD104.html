@@ -2,14 +2,15 @@
 <html>
 <head>
     <title>Google Sheets API Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
         input[type="text"] {
-            width: 200px;  /* 入力フィールドのサイズを大きく */
-            height: 30px;  /* 入力フィールドのサイズを大きく */
+            width: 200px;
+            height: 30px;
         }
         select {
             width: 90px;
@@ -30,6 +31,15 @@
         }
         th {
             background-color: #f3f3f3;
+        }
+
+        @media only screen and (max-width: 600px) {
+            input[type="text"], select {
+                width: 100%;
+            }
+            table, th, td {
+                font-size: smaller;
+            }
         }
     </style>
     <script>
