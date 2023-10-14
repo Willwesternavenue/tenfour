@@ -35,11 +35,14 @@
         #refreshButtonContainer {
             position: fixed;
             bottom: 0;
+            left: 0;
+            right: 0;
             width: 100%;
             background-color: #fff;
             text-align: center;
             padding: 10px;
             box-shadow: 0px -2px 5px #ccc;
+            box-sizing: border-box;  /* paddingを含む全体のwidthが親要素と一致するように */
         }
 
         @media only screen and (max-width: 600px) {
