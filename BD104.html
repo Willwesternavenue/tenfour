@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Sheets API Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input[type="text"] {
+            width: 200px;  /* 入力フィールドのサイズを大きく */
+            height: 30px;  /* 入力フィールドのサイズを大きく */
+        }
+        select {
+            width: 90px;
+            height: 35px;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f3f3f3;
+        }
+    </style>
+    <script>
+        async function fetchData() {
+            const apiKey = 'AIzaSyDLETOa5PccLUFXWQk5LrmvIKqYG7CwV7E';
+            const sheetId = '1nRqBjF7TTTlJRMLIvFu9nNcsJ0x0CtZUMPDeaACS4rw';
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/A:H?key=${apiKey}`;
+
+            const res = await fetch(url);
+            const data = await res.json();
+            const rows = data.values.slice(1); // Exclude the header row
+
+            const nameSearch = document.getElementById("nameSearch").value;
+            const monthSearch = document.getElementById("monthSearch").value;
+
+            const searchResults = rows
+                .filter(row => {
+                    const [name, nickName, company, month, date] = row.slice(0, 5);
+                    return (name?.includes(nameSearch) || nickName?.includes(nameSearch)) && month?.includes(monthSearch);
+                })
+                .sort((a, b) => {
+                    const dateA = parseInt(a[4], 10);
+                    const dateB = parseInt(b[4], 10);
+                    return dateA - dateB;
+                });
+
+            displayResults(searchResults);
+        }
+
+        function displayResults(results) {
+            const resultDiv = document.getElementById("results");
+            resultDiv.innerHTML = '';
+
+            const headers = ["English", "日本名", "Company", "Month", "Date", "Start Date", "Void Date", "Remark"];
+            const table = document.createElement("table");
+
+            // Adding table headers
+            const headerRow = document.createElement("tr");
+            headers.forEach(header => {
+                const th = document.createElement("th");
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // Adding table rows
+            results.forEach(result => {
+                const row = document.createElement("tr");
+                result.forEach(cell => {
+                    const td = document.createElement("td");
+                    td.textContent = cell;
+                    row.appendChild(td);
+                });
+                table.appendChild(row);
+            });
+
+            resultDiv.appendChild(table);
+        }
+    </script>
+</head>
+<body>
+
+
+<h1>104 顧客検索DB</h1>
+
+<input type="text" id="nameSearch" placeholder="名前かニックネーム">
+<br /><br />
+<select id="monthSearch">
+    <option value="">誕生月</option>
+    <option value="1">1月</option>
+    <option value="2">2月</option>
+    <option value="3">3月</option>
+    <option value="4">4月</option>
+    <option value="5">5月</option>
+    <option value="6">6月</option>
+    <option value="7">7月</option>
+    <option value="8">8月</option>
+    <option value="9">9月</option>
+    <option value="10">10月</option>
+    <option value="11">11月</option>
+    <option value="12">12月</option>
+</select>
+<button onclick="fetchData()">検索</button>
+
+<div id="results">
+    <!-- Search results will be displayed here -->
+</div>
+
+</body>
+</html>
